@@ -1,5 +1,8 @@
 #include "List.h"
 
+#undef List_add
+#undef List_addMany
+#undef List_queue
 
 struct item
 {
@@ -21,22 +24,17 @@ List List_addMany(List list, int number, ...)
 {
     va_list vl;
     va_start(vl, number);
-    item *li = malloc(sizeof(item));
-    li->pointeur = list;
-    li->value = va_arg(vl, int);
     int i;
-
     if(number > 0)
     {
-        for(i=0; i<number-1; i++)
+        for(i=0; i<number; i++)
         {
-            li = List_add(li, va_arg(vl, int));
+            list = List_add(list, va_arg(vl, int));
         }
     }
     va_end(vl);
 
-
-    return li;
+    return list;
 }
 
 int List_get(List list, int index)
