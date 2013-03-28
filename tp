@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//exo 10
+void minMax(int *tab, int size, int *min, int *max)
+{
+    int i, m1=tab[0], m2=tab[0];
+    for(i=0; i<size; i++)
+    {
+        if(m1<tab[i])
+            m1 = i;
+        if(m2>tab[i])
+            m2 = i;
+    }
+    *min = tab[m2];
+    *max = tab[m1];
+}
+
+//exo 11
+void display(int *table, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+        printf("%d ", table[i]);
+}
+
+//exo 12
+void carre(int *table, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+        table[i] = i*i;
+}
+
+//exo 13
+void init(int *table, int size)
+{
+    int i, u=0;
+    table[0] = 0;
+
+    for(i=1; i<size; i++)
+    {
+        table[i] = u+2*(i-1)+1;
+        u = u+2*(i-1)+1;
+    }
+}
+
+//exo 14
+int same(int *t1, int *t2, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+    {
+        if(t1[i] != t2[i])
+            return 0;
+    }
+    return 1;
+}
+
+//exo 15
+int prefixe(char *t1, char *t2, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+    {
+        if(t1[i] != t2[i])
+            return 0;
+    }
+    return 1;
+}
+
+int palindrome(char *table, int size)
+{
+    int i;
+    for(i=0; i<size; i++)
+        if(table[i] != table[size-i-1])
+            return 0;
+    return 1;
+}
+
+//exo16
+char lireLettre()
+{
+    char c;
+    printf("Entrer une lettre: ");
+    scanf("%s", &c);
+    printf("\n");
+    return c;
+}
+
+void afficherMot(char *table, int size)
+{
+    int i;
+    for(i=0; i< size; i++)
+    {
+        printf("%s", table[i]);
+    }
+}
+
+void newTable(const int size, char *tab)
+{
+    char t[size];
+    int i;
+    for(i=0; i<size; i++)
+        t[i] = '-';
+    tab = t;
+    printf("%c", t[0]);
+}
+
+char* mot(int *size)
+{
+    printf("Taille du mot: ");
+    scanf("%d", size);
+    char *t;
+    newTable(*size, t);
+    int i;
+    printf("Entrer le mot: ");
+    /*for(i=0; i< s; i++)
+    {
+        scanf("%s", &t[i]);
+    }*/
+    scanf("%s", &t[*size-1]);
+
+    return t;
+}
+
+int main()
+{
+    int tab[5] = {5, 2, 7, 6, 9};
+    char t1[] = {'r','a','d'};
+    char t2[] = {'r','a','d','a','r'};
+    int min=0, max=0;
+    minMax(tab, 5, &min, &max);
+    printf("Min: %d  Max: %d\n", min, max);
+    display(tab, 5);
+
+    printf("\nExo 15:\nprefixe?%d\n", prefixe(t1, t2, 3));
+    printf("plindrome?%d\n", palindrome(t2, 5));
+
+    int s;
+    char *tab2;
+
+
+    newTable(5, tab2);
+
+    //printf("%s\n", tab2[0]);
+    //afficherMot(tab2, s);
+    return 0;
+}
