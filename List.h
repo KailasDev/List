@@ -1,24 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #if defined (WIN32) || defined (WIN64)
-#include <windows.h>
+    #include <windows.h>
 #else
-#include <stdarg.h>
+    #include <stdarg.h>
 #endif
 
 typedef struct item item;
 typedef item *List;
+///WARNING: in the declaration, the variable of type List MUST be initialized at NULL
 
-List List_add(List, int);
+List List_add(List, int); ///Add the number at the list's head
 #define List_add(list, value) list = List_add(list, value)
 
-List List_addMany(List, int, ...);
+List List_addMany(List, int, ...); ///args: List, number of new values, all values...
 #define List_addMany(list, number, ...) list = List_addMany(list, number, __VA_ARGS__)
 
-int List_get(List, int);
+int List_get(List, int); ///index begining at 0
 void List_display(List);
 int List_size(List);
-int List_head(List);
+int List_head(List); ///based on lists caml
+List List_delete(List);
+#define List_delete(list) list = List_delete(list)
 
-List List_queue(List);
+List List_deleteElement(List, int);
+#define List_deleteElement(list, index) list = List_deleteElement(list, index)
+
+int List_indexOf(List, int); ///only the first element
+
+List List_queue(List); ///based on lists caml
 #define List_queue(list) list = List_queue(list)
