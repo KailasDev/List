@@ -12,7 +12,9 @@ typedef itemBase *List;
 typedef float type;
 ///WARNING: in the declaration, the variable of type List MUST be initialized at NULL
 
-
+List List_newInt();
+List List_new Float();
+List List_newChar();
 List List_create();
 List List_add(List, type); ///Add the number at the list's head
 List List_addMany(List, int, ...); ///args: List, number of new values, all values...
