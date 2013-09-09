@@ -12,18 +12,49 @@ struct item
     struct item *pointer;
 };
 
+struct itemBase
+{
+    int sizeList;
+    int type;
+    item *pointer;
+};
 
+
+List List_create(List list)
+{
+    itemBase* base = (itemBase*)malloc(sizeof(itemBase));
+
+    base->sizeList = 0;
+    base->type = 0;
+    base->pointer = NULL;
+
+    list = base;
+
+    return list;
+}
 
 List List_add(List list, int value)
 {
+
+    if(list == NULL)
+    {
+        list = List_create(list);
+        list->sizeList = 0;
+    }
+
     item *li = (item*)malloc(sizeof(item));
     li->value = value;
     li->pointer = NULL;
 
-    if(list == NULL)
-        return li;
+    list->sizeList++;
 
-    item* tmp = list;
+    if(list->sizeList == 1)
+    {
+        list->pointer = li;
+        return list;
+    }
+
+    item* tmp = list->pointer;
 
     while(tmp->pointer != NULL)
         tmp = tmp->pointer;
@@ -32,7 +63,6 @@ List List_add(List list, int value)
 
     return list;
 }
-
 
 
 List List_addMany(List list, int number, ...)
@@ -59,7 +89,7 @@ int List_get(List list, int index)
     if(index >= List_size(list) || index < 0)
         return -1;
 
-    item* tmp = list;
+    item* tmp = list->pointer;
 
     int i;
     for(i=0; i<index; i++)
@@ -71,35 +101,46 @@ int List_get(List list, int index)
 
 int List_size(List list)
 {
-    if(list == NULL)
-        return 0;
-    return List_size(list->pointer)+1;
+    return list->sizeList;
 }
 
 
 
 void List_display(List list)
 {
-    if(list == NULL)
+    if(list == NULL || list->pointer == NULL)
         return;
-    printf("%d ", list->value);
-    List_display(list->pointer);
+
+    int i;
+
+    item* li = list->pointer;
+
+    for(i=0; i<list->sizeList; i++)
+    {
+        printf("%d ", li->value);
+        li = li->pointer;
+
+    }
 }
 
 
 
 int List_head(List list)
 {
-    return list->value;
+    if(List_size(list) == 0)
+        return;
+    return list->pointer->value;
 }
 
 
 
 List List_queue(List list)
 {
-    return list->pointer;
+    if(List_size(list) <2)
+        return NULL;
+    list->sizeList--;
+    return list->pointer->pointer;
 }
-
 
 
 List List_delete(List list)
@@ -122,13 +163,13 @@ List List_delete(List list)
 
 List List_deleteElement(List list, int index)
 {
-    item* tmp = list;
+    item* tmp = list->pointer;
 
     if(index == 0)
     {
-        tmp = tmp->pointer;
-        free(list);
-        return tmp;
+        list->pointer = tmp->pointer;
+        free(tmp);
+        return list;
     }
 
     int i;
@@ -152,10 +193,11 @@ List List_deleteElement(List list, int index)
 }
 
 
-
 int List_indexOf(List list, int value)
 {
-    item *tmp = list;
+    if(list == NULL || list->pointer == NULL)
+        return -1;
+    item *tmp = list->pointer;
     int i;
     for(i=0; tmp != NULL && tmp->value != value; i++)
         tmp = tmp->pointer;

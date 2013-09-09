@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+enum type{TYPE_INTEGER, TYPE_FLOAT, TYPE_CHAR};
+
+typedef struct itemBase itemBase;
 typedef struct item item;
-typedef item *List;
+typedef itemBase *List;
 ///WARNING: in the declaration, the variable of type List MUST be initialized at NULL
 
 List List_add(List, int); ///Add the number at the list's head
