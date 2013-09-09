@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#if defined (WIN32) || defined (WIN64)
-    #include <windows.h>
-#else
-    #include <stdarg.h>
-#endif
+#include <stdarg.h>
 
 typedef struct item item;
 typedef item *List;
