@@ -6,9 +6,18 @@
 #undef List_delete
 #undef List_deleteElement
 
+union typeVoid
+{
+    int in;
+    float fl;
+    char ch;
+};
+
+
+
 struct item
 {
-    int value;
+    typeVoid value;
     struct item *pointer;
 };
 
@@ -20,7 +29,7 @@ struct itemBase
 };
 
 
-List List_create(List list)
+List List_create()
 {
     itemBase* base = (itemBase*)malloc(sizeof(itemBase));
 
@@ -28,22 +37,78 @@ List List_create(List list)
     base->type = 0;
     base->pointer = NULL;
 
-    list = base;
-
-    return list;
+    return base;
 }
 
-List List_add(List list, int value)
+List List_newInt()
+{
+    itemBase *it = List_create();
+    it->type = TYPE_INTEGER;
+
+    return it;
+}
+
+List List_newFloat()
+{
+    itemBase *it = List_create();
+    it->type = TYPE_FLOAT;
+
+    return it;
+}
+
+List List_newChar()
+{
+    itemBase *it = List_create();
+    it->type = TYPE_CHAR;
+
+    return it;
+}
+
+
+List List_add(List list, type value)
 {
 
     if(list == NULL)
     {
-        list = List_create(list);
+        list = List_create();
+
+        switch(list->type)
+        {
+            case TYPE_INTEGER:
+                list = List_newInt();
+                break;
+            case TYPE_FLOAT:
+                list = List_newFloat();
+                break;
+            case TYPE_CHAR:
+                list = List_newChar();
+                break;
+            default:
+                list = List_newInt();
+                break;
+        }
         list->sizeList = 0;
     }
 
     item *li = (item*)malloc(sizeof(item));
-    li->value = value;
+
+    switch(list->type)
+    {
+        case TYPE_INTEGER:
+            li->value.in = (int)value;
+            break;
+        case TYPE_FLOAT:
+            li->value.fl = value;
+            printf("verif %f\n", li->value.fl);
+            break;
+        case TYPE_CHAR:
+            li->value.ch = (char)value;
+            break;
+        default:
+            li->value.in = (int)value;
+            break;
+    }
+
     li->pointer = NULL;
 
     list->sizeList++;
@@ -94,9 +159,25 @@ int List_get(List list, int index)
     int i;
     for(i=0; i<index; i++)
         tmp = tmp->pointer;
-    return tmp->value;
-}
 
+    switch(list->type)
+    {
+        case TYPE_INTEGER:
+            return tmp->value.in;
+            break;
+        case TYPE_FLOAT:
+            return tmp->value.fl;
+            break;
+        case TYPE_CHAR:
+            return tmp->value.ch;
+            break;
+        default:
+            return tmp->value.in;
+            break;
+    }
+
+    return -1;
+}
 
 
 int List_size(List list)
@@ -112,12 +193,25 @@ void List_display(List list)
         return;
 
     int i;
-
     item* li = list->pointer;
 
     for(i=0; i<list->sizeList; i++)
     {
-        printf("%d ", li->value);
+        switch(list->type)
+        {
+            case TYPE_INTEGER:
+                printf("%d ", li->value.in);
+                break;
+            case TYPE_FLOAT:
+                printf("%f ", li->value.fl);
+                break;
+            case TYPE_CHAR:
+                printf("%c ", li->value.ch);
+                break;
+            default:
+                printf("%d ", li->value.in);
+                break;
+        }
         li = li->pointer;
 
     }
@@ -129,7 +223,22 @@ int List_head(List list)
 {
     if(List_size(list) == 0)
         return;
-    return list->pointer->value;
+    switch(list->type)
+    {
+        case TYPE_INTEGER:
+            return list->pointer->value.in;
+            break;
+        case TYPE_FLOAT:
+            return list->pointer->value.fl;
+            break;
+        case TYPE_CHAR:
+            return list->pointer->value.ch;
+            break;
+        default:
+            return list->pointer->value.in;
+            break;
+    }
+    return;
 }
 
 
@@ -193,14 +302,32 @@ List List_deleteElement(List list, int index)
 }
 
 
-int List_indexOf(List list, int value)
+int List_indexOf(List list, type value)
 {
     if(list == NULL || list->pointer == NULL)
         return -1;
     item *tmp = list->pointer;
     int i;
-    for(i=0; tmp != NULL && tmp->value != value; i++)
+    for(i=0; tmp != NULL; i++)
+    {
+        switch(list->type)
+        {
+            case TYPE_INTEGER:
+                if(tmp->value.in == (int)value)
+                    return i;
+                break;
+            case TYPE_FLOAT:
+                if(tmp->value.in == value)
+                    return i;
+                break;
+            case TYPE_CHAR:
+                if(tmp->value.in == (char)value)
+                    return i;
+                break;
+        }
         tmp = tmp->pointer;
+    }
+
     if(tmp == NULL)
         return -1;
     return i;
