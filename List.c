@@ -5,6 +5,7 @@
 #undef List_queue
 #undef List_delete
 #undef List_deleteElement
+#define TEST
 
 struct item
 {
